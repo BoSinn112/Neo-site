@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Нео | Матрица Вики</title>
+    <style>
+        :root {
+            --matrix-green: #00ff41;
+            --matrix-dark: #0a0a0a;
+            --matrix-darker: #050505;
+            --matrix-gray: #1a1a1a;
+            --matrix-light: #cccccc;
+            --matrix-white: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: var(--matrix-darker);
+            color: var(--matrix-light);
+            line-height: 1.7;
+            min-height: 100vh;
+            overflow-x: hidden;
+            margin-left: 350px;
+        }
+        
+        /* ЦИФРОВОЙ ДОЖДЬ */
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .rain-drop {
+            position: absolute;
+            color: var(--matrix-green);
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            font-weight: bold;
+            opacity: 0;
+            animation: rainFall linear infinite;
+            text-shadow: 0 0 10px var(--matrix-green);
+        }
+        
+        @keyframes rainFall {
+            0% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.9;
+            }
+            90% {
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+        
+        header {
+            background: rgba(10, 10, 10, 0.95);
+            border-bottom: 2px solid var(--matrix-green);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--matrix-green);
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-menu a {
+            color: var(--matrix-light);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--matrix-green);
+            background: rgba(0, 255, 65, 0.1);
+        }
+        
+        .fixed-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 350px;
+            height: 100vh;
+            background: var(--matrix-dark);
+            border-right: 2px solid var(--matrix-green);
+            padding: 1.5rem;
+            overflow-y: auto;
+            z-index: 900;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 20px;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            color: var(--matrix-green);
+            margin-bottom: 1rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--matrix-light);
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: var(--matrix-dark);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: border-color 0.3s;
+        }
+        
+        .card:hover {
+            border-color: var(--matrix-green);
+        }
+        
+        .card h2 {
+            color: var(--matrix-green);
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .character-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(45deg, #1a1a1a, #2a2a2a);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #333;
+            overflow: hidden;
+        }
+        
+        .character-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        
+        .infobox-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #333;
+            font-size: 0.9rem;
+        }
+        
+        .infobox-label {
+            font-weight: bold;
+            color: var(--matrix-green);
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .table th, .table td {
+            padding: 0.6rem;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+        
+        .table th {
+            background: var(--matrix-gray);
+            color: var(--matrix-green);
+            font-weight: 600;
+        }
+        
+        .quote {
+            border-left: 3px solid var(--matrix-green);
+            padding: 1rem;
+            margin: 1rem 0;
+            background: var(--matrix-gray);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+        
+        .breadcrumbs {
+            margin-bottom: 1.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .breadcrumbs a {
+            color: var(--matrix-green);
+            text-decoration: none;
+        }
+        
+        .breadcrumbs span {
+            color: var(--matrix-light);
+        }
+        
+        .related-characters {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+        
+        .character-card {
+            background: var(--matrix-gray);
+            border-radius: 6px;
+            padding: 0.8rem;
+            transition: border-color 0.3s;
+            border: 1px solid #333;
+        }
+        
+        .character-card:hover {
+            border-color: var(--matrix-green);
+        }
+        
+        .character-card strong {
+            color: var(--matrix-green);
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        
+        .character-card p {
+            font-size: 0.8rem;
+            margin: 0;
+            color: var(--matrix-light);
+        }
+        
+        footer {
+            background: var(--matrix-dark);
+            border-top: 1px solid #333;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            font-size: 0.9rem;
+        }
+        
+        .footer-section h3 {
+            color: var(--matrix-green);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.3rem;
+        }
+        
+        .footer-links a {
+            color: var(--matrix-light);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.8rem;
+        }
+        
+        .footer-links a:hover {
+            color: var(--matrix-green);
+        }
+        
+        @media (max-width: 1024px) {
+            .fixed-sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                margin-bottom: 2rem;
+            }
+            
+            body {
+                margin-left: 0;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-rain" id="matrixRain"></div>
+    
+    <aside class="fixed-sidebar">
+        <div class="card">
+            <h2>Томас Андерсон</h2>
+            <div class="character-image">
+                <img id="neoPhoto" src="neo.jpg" alt="Нео">
+            </div>
+            
+            <div class="infobox-row">
+                <span class="infobox-label">Имя:</span>
+                <span>Томас Андерсон</span>
+            </div>
+            <div class="infobox-row">
+                <span class="infobox-label">Прозвище:</span>
+                <span>Нео</span>
+            </div>
+            <div class="infobox-row">
+                <span class="infobox-label">Статус:</span>
+                <span>Избранный</span>
+            </div>
+            <div class="infobox-row">
+                <span class="infobox-label">Род занятий:</span>
+                <span>Программист</span>
+            </div>
+            <div class="infobox-row">
+                <span class="infobox-label">Актёр:</span>
+                <span>Киану Ривз</span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Навигация</h2>
+            <ul class="footer-links">
+                <li><a href="#biography">📖 Биография</a></li>
+                <li><a href="#abilities">⚡ Способности</a></li>
+                <li><a href="#appearances">🎬 Фильмы</a></li>
+                <li><a href="#quotes">💬 Цитаты</a></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Связанные персонажи</h2>
+            <div class="related-characters">
+                <div class="character-card">
+                    <strong>Тринити</strong>
+                    <p>Возлюбленная и соратница</p>
+                </div>
+                <div class="character-card">
+                    <strong>Морфеус</strong>
+                    <p>Наставник и освободитель</p>
+                </div>
+                <div class="character-card">
+                    <strong>Агент Смит</strong>
+                    <p>Главный антагонист</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <header>
+        <nav class="nav-container">
+            <a href="#" class="logo">Матрица Вики</a>
+            <ul class="nav-menu">
+                <li><a href="#biography">Биография</a></li>
+                <li><a href="#abilities">Способности</a></li>
+                <li><a href="#appearances">Фильмы</a></li>
+                <li><a href="#quotes">Цитаты</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumbs">
+            <a href="#">Главная</a> > <a href="#">Персонажи</a> > <span>Нео</span>
+        </div>
+        
+        <div class="hero">
+            <h1>НЕО</h1>
+            <p class="hero-subtitle">Томас А. Андерсон • Избранный • Освободитель человечества</p>
+        </div>
+        
+        <main class="main-content">
+            <section id="biography" class="card content-section">
+                <h2>Биография</h2>
+                <h3>Ранние годы</h3>
+                <p>Томас Андерсон работал программистом в метакорпорации, ведя двойную жизнь хакера под псевдонимом Нео. Его поиски таинственного Морфеуса привели к открытию правды о Матрице.</p>
+                
+                <h3>Пробуждение</h3>
+                <p>После принятия красной таблетки, Нео был освобождён из Матрицы и увидел истинную реальность — пост-апокалиптический мир, где человечество порабощено машинами.</p>
+                
+                <h3>Становление Избранным</h3>
+                <p>После тренировок и испытаний, Нео полностью раскрыл свой потенциал как Избранный — единственный, кто может свободно изменять код Матрицы и противостоять Агентам.</p>
+            </section>
+            
+            <section id="abilities" class="card content-section">
+                <h2>Способности и силы</h2>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Способность</th>
+                            <th>Описание</th>
+                            <th>Уровень владения</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Матричное зрение</td>
+                            <td>Восприятие кода Матрицы вместо иллюзорной реальности</td>
+                            <td>Мастер</td>
+                        </tr>
+                        <tr>
+                            <td>Уклонение от пуль</td>
+                            <td>Сверхчеловеческая скорость и реакция</td>
+                            <td>Эксперт</td>
+                        </tr>
+                        <tr>
+                            <td>Полет</td>
+                            <td>Преодоление гравитации в пределах Матрицы</td>
+                            <td>Мастер</td>
+                        </tr>
+                        <tr>
+                            <td>Телекинез</td>
+                            <td>Управление объектами силой мысли</td>
+                            <td>Эксперт</td>
+                        </tr>
+                        <tr>
+                            <td>Программирование Матрицы</td>
+                            <td>Изменение правил и кода симуляции</td>
+                            <td>Уникальный</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            
+            <section id="appearances" class="card content-section">
+                <h2>Появления в фильмах</h2>
+                
+                <h3>Матрица (1999)</h3>
+                <p>Первое появление и становление как Избранного. Противостояние с Агентами и спасение Морфеуса.</p>
+                
+                <h3>Матрица: Перезагрузка (2003)</h3>
+                <p>Борьба за Зион и развитие отношений с Тринити. Противостояние с новыми врагами, включая Близнецов.</p>
+                
+                <h3>Матрица: Революция (2003)</h3>
+                <p>Финальная битва за человечество. Жертва ради установления перемирия между людьми и машинами.</p>
+                
+                <h3>Матрица: Воскрешение (2021)</h3>
+                <p>Возвращение в обновлённую Матрицу и новое пробуждение.</p>
+            </section>
+            
+            <section id="quotes" class="card content-section">
+                <h2>Знаменитые цитаты</h2>
+                
+                <div class="quote">
+                    "Я знаю, что ты здесь. Ты боишься. Ты боишься нас. Ты боишься перемен."
+                </div>
+                
+                <div class="quote">
+                    "Нет ложки."
+                </div>
+                
+                <div class="quote">
+                    "Я знаю кунг-фу."
+                </div>
+                
+                <div class="quote">
+                    "Меня зовут Нео."
+                </div>
+            </section>
+            
+            <section id="trivia" class="card content-section">
+                <h2>Интересные факты</h2>
+                <ul style="padding-left: 2rem;">
+                    <li>Изначально роль Нео предлагалась Уиллу Смиту</li>
+                    <li>Киану Ривз снизил гонорар, чтобы финансировать спецэффекты</li>
+                    <li>Сцены с кунг-фу снимались 4 месяца</li>
+                    <li>Ривз самостоятельно выполнял многие трюки</li>
+                    <li>Знаменитая сцена с уклонением от пуль снималась 4 дня</li>
+                    <li>Киану Ривз изучал кунг-фу 4 месяца перед съемками</li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Матрица Вики</h3>
+                <p>Полная энциклопедия по вселенной Матрицы. Фанатский некоммерческий проект.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Разделы</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Персонажи</a></li>
+                    <li><a href="#">Локации</a></li>
+                    <li><a href="#">Оружие</a></li>
+                    <li><a href="#">Технологии</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Фильмы</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Матрица (1999)</a></li>
+                    <li><a href="#">Перезагрузка</a></li>
+                    <li><a href="#">Революция</a></li>
+                    <li><a href="#">Воскрешение</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ЦИФРОВОЙ ДОЖДЬ - ТОЛЬКО 0 И 1
+        function createMatrixRain() {
+            const container = document.getElementById('matrixRain');
+            
+            // Создаем 100 символов (только 0 и 1)
+            for (let i = 0; i < 100; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'rain-drop';
+                
+                // Каждый символ в случайном месте
+                drop.style.left = Math.random() * 100 + 'vw';
+                
+                // МЕДЛЕННАЯ скорость (3-6 секунд)
+                const duration = Math.random() * 3 + 3; // 3-6 секунд
+                drop.style.animationDuration = duration + 's';
+                
+                // Случайная задержка
+                drop.style.animationDelay = (Math.random() * 8) + 's';
+                
+                // БОЛЬШОЙ размер (22-28px)
+                drop.style.fontSize = (Math.random() * 6 + 22) + 'px';
+                
+                // Случайная прозрачность
+                drop.style.opacity = Math.random() * 0.7 + 0.3;
+                
+                // ТОЛЬКО 0 ИЛИ 1
+                const randomBit = Math.random() > 0.5 ? '1' : '0';
+                drop.textContent = randomBit;
+                
+                container.appendChild(drop);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            createMatrixRain();
+            
+            const links = document.querySelectorAll('a[href^="#"]');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+
+        setTimeout(() => {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                }, index * 100);
+            });
+        }, 100);
+    </script>
+</body>
+</html>
